@@ -15,6 +15,21 @@ from .validator import (
 
 
 def filter_data(data: dict[str, dict[str, list[dict[str, float | int]]]], region: str, vehicle_type: str, vehicle_cc: int, *args, **kwargs) -> dict[str, float | int] | dict:
+    """
+    Filter data based on region, vehicle type, and vehicle cc.
+
+    Args:
+        data (dict[str, dict[str, list[dict[str, float | int]]]]): The data to filter.
+        region (str): The region to filter by.
+        vehicle_type (str): The vehicle type to filter by.
+        vehicle_cc (int): The vehicle cc to filter by.
+        *args: Additional positional arguments.
+        **kwargs: Additional keyword arguments.
+
+    Returns:
+        dict[str, float | int] | dict: The filtered data.
+
+    """
     return next(filter(lambda x: x.get("start_range", 0) <= vehicle_cc <= x.get("end_range", 0), data.get(vehicle_type, {}).get(region, [])), {})
 
 
@@ -115,6 +130,25 @@ def calculate(
     *args: tuple,
     **kwargs: dict[str, Any],
 ) -> float:
+    """
+    Calculate the road tax based on the given postcode, vehicle type, and vehicle cc.
+
+    Args:
+        postcode (int): The postcode of the location where the vehicle is registered.
+        vehicle_type (str): The type of the vehicle.
+        vehicle_cc (int): The cubic centimeter (cc) of the vehicle engine.
+        data (dict[str, dict[str, list[dict[str, float | int]]]], optional): The road tax data used for calculation. Defaults to roadtax_data.
+        *args (tuple): Additional positional arguments.
+        **kwargs (dict[str, Any]): Additional keyword arguments.
+
+    Returns:
+        float: The calculated road tax.
+
+    Raises:
+        InvalidPostcode: If the postcode is invalid.
+        InvalidVehicleCC: If the vehicle cc is invalid.
+        InvalidVehicleType: If the vehicle type is invalid.
+    """
     try:
         postcode, vehicle_type, vehicle_cc = validate_all(
             postcode=postcode,
